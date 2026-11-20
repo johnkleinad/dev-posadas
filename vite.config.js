@@ -1,9 +1,10 @@
+import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), tailwindcss()],
   server: {
     // Escucha en todas las interfaces (localhost + Tailscale)
     host: true,
@@ -17,5 +18,8 @@ export default defineConfig({
     port: 4173,
     strictPort: true,
     allowedHosts: ['.ts.net'],
+  },
+  test: {
+    environment: 'node',
   },
 })
