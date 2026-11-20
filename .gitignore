@@ -30,3 +30,7 @@ amplify_outputs.json
 
 # Superpowers workspace
 .superpowers/
+
+# amplify
+amplify_outputs*
+amplifyconfiguration*
