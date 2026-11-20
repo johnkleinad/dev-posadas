@@ -19,6 +19,10 @@ export default defineConfig({
     strictPort: true,
     allowedHosts: ['.ts.net'],
   },
+  build: {
+    // aws-amplify ocupa ~500 kB; es un solo chunk aceptable para este juego.
+    chunkSizeWarningLimit: 700,
+  },
   test: {
     environment: 'node',
   },

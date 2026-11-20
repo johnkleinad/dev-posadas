@@ -1,6 +1,6 @@
 const COLORS = ['#E4007C', '#FF7A00', '#FFC20E', '#0B8A3E', '#00A6A6', '#6A2C91', '#D7263D']
 const FLAG_W = 56
-const COUNT = 14
+const COUNT = 32
 
 /** Una bandera de papel picado con calados (fill-rule evenodd). */
 function flagPath(x) {
@@ -18,10 +18,10 @@ function flagPath(x) {
 }
 
 /** Banda decorativa de papel picado para la parte superior. */
-export default function PapelPicado({ className = '' }) {
+export default function PapelPicado({ className = '', style }) {
   const width = FLAG_W * COUNT
   return (
-    <svg viewBox={`0 0 ${width} 66`} preserveAspectRatio="xMidYMin slice" className={className} aria-hidden="true">
+    <svg viewBox={`0 0 ${width} 66`} preserveAspectRatio="xMidYMin slice" className={className} style={style} aria-hidden="true">
       <path d={`M0,6 Q${width / 2},14 ${width},6`} stroke="#1A1A1A" strokeWidth="3" fill="none" />
       {Array.from({ length: COUNT }, (_, i) => (
         <path

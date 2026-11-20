@@ -108,9 +108,9 @@ export default function GameScene({ game, sfx, children }) {
       <div className="absolute inset-0 bg-gradient-to-b from-rosa/45 via-naranja/20 to-morado/55 mix-blend-multiply" />
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-tinta/40" />
 
-      <div className="relative mx-auto flex h-full max-w-[480px] flex-col" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
+      <PapelPicado className="absolute top-0 left-0 z-20 h-12 w-full" style={{ marginTop: 'env(safe-area-inset-top)' }} />
+      <div className="relative mx-auto flex h-full max-w-[480px] flex-col" style={{ paddingTop: 'calc(env(safe-area-inset-top) + 3rem)' }}>
         <div className="relative z-20 shrink-0">
-          <PapelPicado className="h-12 w-full" />
           {showHud && <Hud timeLeft={timeLeft} level={level} hits={hits} required={required} />}
         </div>
 

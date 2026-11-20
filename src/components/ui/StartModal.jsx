@@ -25,7 +25,7 @@ export default function StartModal({ onPlay, board, muted, onToggleMute }) {
       <p className="mt-3 text-center font-extrabold text-tinta/80">
         Rompe la piñata antes de que se acabe el tiempo. Cada nivel tienes <b className="text-rosa">10 segundos</b> y la piñata aguanta más golpes.
       </p>
-      <p className="mt-1 text-center text-sm font-extrabold text-tinta/60">Toca la pantalla lo más rápido que puedas</p>
+      <p className="mt-1 text-center text-sm font-extrabold text-tinta/60">Toca la pantalla (o haz clic) lo más rápido que puedas</p>
       <ComicButton className="mt-4" color="bg-rosa text-white!" onClick={onPlay}>
         ¡Jugar!
       </ComicButton>
