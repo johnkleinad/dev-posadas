@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useReducer, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useReducer, useRef, useState } from 'react'
 import { gameReducer, initialState } from './gameReducer.js'
 import { createHitLimiter } from './hitLimiter.js'
 import { LEVEL_SECONDS } from './rules.js'
@@ -12,7 +12,9 @@ export function useGame() {
   const [now, setNow] = useState(() => performance.now())
   const limiter = useRef(createHitLimiter())
   const stateRef = useRef(state)
-  stateRef.current = state
+  useLayoutEffect(() => {
+    stateRef.current = state
+  }, [state])
 
   const running = state.phase === 'countdown' || state.phase === 'playing'
 
