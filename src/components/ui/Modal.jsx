@@ -1,12 +1,14 @@
 import gsap from 'gsap'
-import { useLayoutEffect, useRef } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 
 /** Tarjeta modal estilo cómic. Bloquea los taps hacia la escena. */
 export default function Modal({ title, children, delay = 0, labelledBy = 'modal-title' }) {
   const backdrop = useRef(null)
   const card = useRef(null)
+  // Los botones no responden hasta que la tarjeta es visible (evita taps a ciegas).
+  const [ready, setReady] = useState(false)
   useLayoutEffect(() => {
-    const tl = gsap.timeline({ delay })
+    const tl = gsap.timeline({ delay, onComplete: () => setReady(true) })
     tl.fromTo(backdrop.current, { opacity: 0 }, { opacity: 1, duration: 0.2 }).fromTo(
       card.current,
       { scale: 0.6, rotation: -4, opacity: 0 },
@@ -26,6 +28,8 @@ export default function Modal({ title, children, delay = 0, labelledBy = 'modal-
     >
       <div
         ref={card}
+        data-testid="modal-card"
+        style={{ pointerEvents: ready ? 'auto' : 'none' }}
         className="max-h-[92%] w-full max-w-[420px] overflow-y-auto rounded-3xl border-4 border-tinta bg-crema p-5 shadow-[8px_8px_0_#1A1A1A]"
       >
         {title && (

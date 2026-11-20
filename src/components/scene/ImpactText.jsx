@@ -6,12 +6,17 @@ const COLORS = ['#FFC20E', '#E4007C', '#00A6A6', '#FF7A00']
 /** Onomatopeya de cómic que aparece donde se tocó y se desvanece. */
 export default function ImpactText({ x, y, text, big = false, onDone }) {
   const ref = useRef(null)
+  const onDoneRef = useRef(onDone)
   useLayoutEffect(() => {
-    const tl = gsap.timeline({ onComplete: onDone })
+    onDoneRef.current = onDone
+  }, [onDone])
+  // La animación corre una sola vez al montar: el padre re-renderiza cada frame.
+  useLayoutEffect(() => {
+    const tl = gsap.timeline({ onComplete: () => onDoneRef.current?.() })
     tl.fromTo(ref.current, { scale: 0, rotation: gsap.utils.random(-25, 25) }, { scale: big ? 1.5 : 1.15, duration: 0.12, ease: 'back.out(3)' })
       .to(ref.current, { y: -40, opacity: 0, duration: 0.4, ease: 'power1.in' }, 0.15)
     return () => tl.kill()
-  }, [big, onDone])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
   return (
     <div
       ref={ref}

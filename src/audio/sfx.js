@@ -12,7 +12,8 @@ export function createSfx() {
       if (!AC) return null
       ctx = new AC()
     }
-    if (ctx.state === 'suspended') ctx.resume()
+    // iOS puede dejarlo 'suspended' o 'interrupted' (tras bloquear el teléfono o una llamada).
+    if (ctx.state !== 'running') ctx.resume()?.catch?.(() => {})
     return ctx
   }
 
