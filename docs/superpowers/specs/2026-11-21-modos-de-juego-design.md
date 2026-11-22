@@ -1,6 +1,6 @@
 # ¡Dale, Dale! — Modos de juego: Clásico y Fiesta (diseño)
 
-Fecha: 2026-11-21 · Proyecto: `dev-posadas` · Rama: `beta` · Estado: en revisión del usuario
+Fecha: 2026-11-21 · Proyecto: `dev-posadas` · Rama: `beta` · Estado: aprobado
 Parte de: [2026-11-20-pinatas-posadas-design.md](2026-11-20-pinatas-posadas-design.md) (el diseño original sigue vigente salvo lo que aquí cambia).
 
 ## Intención
