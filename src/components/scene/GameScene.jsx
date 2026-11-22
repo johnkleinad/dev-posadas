@@ -111,7 +111,17 @@ export default function GameScene({ game, sfx, children }) {
       <PapelPicado className="absolute top-0 left-0 z-20 h-12 w-full" style={{ marginTop: 'env(safe-area-inset-top)' }} />
       <div className="relative mx-auto flex h-full max-w-[480px] flex-col" style={{ paddingTop: 'calc(env(safe-area-inset-top) + 3rem)' }}>
         <div className="relative z-20 shrink-0">
-          {showHud && <Hud timeLeft={timeLeft} level={level} hits={hits} required={required} />}
+          {showHud && (
+            <Hud
+              timeLeft={timeLeft}
+              levelSeconds={state.levelSeconds}
+              level={level}
+              hits={hits}
+              required={required}
+              activePowerUp={phase === 'playing' || phase === 'countdown' ? state.active : null}
+              frozen={game.frozen}
+            />
+          )}
         </div>
 
         <div className="relative flex-1">

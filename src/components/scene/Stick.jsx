@@ -1,18 +1,26 @@
 const INK = '#1A1A1A'
 
 /**
- * Palo de madera envuelto en papel de colores. El pivote (mano) está en el
- * extremo inferior: transform-origin 30px 330px dentro del viewBox 0 0 60 340.
+ * Palo de madera envuelto en papel de colores. `innerRef` apunta al <svg>
+ * completo: se gira el elemento entero (CSS transform) y no un <g> interno,
+ * porque Safari/iOS recorta lo que sale de la caja del SVG cuando lleva filtro
+ * (drop-shadow). El pivote (mano) es el extremo inferior: 30,330 de 60×340.
  */
 export default function Stick({ innerRef, className = '' }) {
   return (
-    <svg viewBox="0 0 60 340" overflow="visible" className={className} aria-hidden="true">
+    <svg
+      ref={innerRef}
+      viewBox="0 0 60 340"
+      className={className}
+      style={{ transformOrigin: '50% 97%', willChange: 'transform' }}
+      aria-hidden="true"
+    >
       <defs>
         <clipPath id="stick-clip">
           <rect x="16" y="10" width="28" height="320" rx="14" />
         </clipPath>
       </defs>
-      <g ref={innerRef} style={{ transformOrigin: '30px 330px', transformBox: 'view-box' }}>
+      <g>
         <rect x="16" y="10" width="28" height="320" rx="14" fill="#A8652A" />
         <g clipPath="url(#stick-clip)">
           <path d="M24,20 q4,60 -2,120 q-4,60 2,120" stroke="#7A4519" strokeWidth="3" fill="none" />

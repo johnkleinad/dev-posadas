@@ -1,16 +1,14 @@
 import { useCallback, useEffect, useLayoutEffect, useReducer, useRef, useState } from 'react'
 import { gameReducer, initialState } from './gameReducer.js'
-import { createHitLimiter } from './hitLimiter.js'
-import { countdownLeftAt, timeLeftAt } from './clock.js'
+import { countdownLeftAt, isFrozen, timeLeftAt } from './clock.js'
 
 /**
- * Hook del juego: reducer + reloj con requestAnimationFrame + limitador de golpes.
+ * Hook del juego: reducer + reloj con requestAnimationFrame.
  * `timeLeft` (segundos) y `countdownLeft` (entero 3..0) se recalculan en cada frame.
  */
 export function useGame() {
   const [state, dispatch] = useReducer(gameReducer, initialState)
   const [now, setNow] = useState(() => performance.now())
-  const limiter = useRef(createHitLimiter())
   const stateRef = useRef(state)
   useLayoutEffect(() => {
     stateRef.current = state
@@ -31,25 +29,27 @@ export function useGame() {
     return () => cancelAnimationFrame(raf)
   }, [running])
 
-  const start = useCallback(() => {
-    limiter.current = createHitLimiter()
-    dispatch({ type: 'START', now: performance.now() })
+  /** Empieza una partida; sin `modeId` repite el modo actual. */
+  const start = useCallback((modeId) => {
+    dispatch({ type: 'START', now: performance.now(), modeId })
   }, [])
 
   const hit = useCallback(() => {
     const s = stateRef.current
     const t = performance.now()
     if (s.phase !== 'playing' || t >= s.deadline) return false
-    if (!limiter.current(t)) return false
-    dispatch({ type: 'HIT', now: t })
+    dispatch({ type: 'HIT', now: t, playerId: 'local' })
     return true
   }, [])
 
   const nextLevel = useCallback(() => dispatch({ type: 'NEXT_LEVEL', now: performance.now() }), [])
   const toMenu = useCallback(() => dispatch({ type: 'TO_MENU' }), [])
+  const buy = useCallback((powerUpId) => dispatch({ type: 'BUY', powerUpId }), [])
 
   const timeLeft = timeLeftAt(state, now)
   const countdownLeft = countdownLeftAt(state, now)
+  const sinceStart = state.phase === 'playing' ? now - state.levelStartedAt : Infinity
+  const frozen = isFrozen(state, now)
 
-  return { state, start, hit, nextLevel, toMenu, timeLeft, countdownLeft }
+  return { state, start, hit, nextLevel, toMenu, buy, timeLeft, countdownLeft, sinceStart, frozen }
 }

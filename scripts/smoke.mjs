@@ -1,6 +1,7 @@
 // Prueba de humo: node scripts/smoke.mjs <url>
-// Recorre menú → nivel 1 → nivel 2 → fin de partida (sin guardar puntaje) en
-// iPhone 13, Pixel 7 y escritorio. Sale con código 1 si algo falla.
+// Clásico: modos → Clásico → nivel 1 → nivel 2 → fin de partida (sin guardar puntaje).
+// Fiesta: "Menú" → "← Modos" → el botón de Fiesta está deshabilitado ("Próximamente").
+// En iPhone 13, Pixel 7 y escritorio. Sale con código 1 si algo falla.
 // Usa PW_CHROME=<ruta a chrome> si el navegador de Playwright no está instalado.
 import { chromium, devices } from 'playwright'
 
@@ -31,15 +32,20 @@ for (const [name, device] of targets) {
   }
 
   try {
+    const breakPinata = async () => {
+      for (let i = 0; i < 15; i++) {
+        await tapScene()
+        await page.waitForTimeout(60)
+      }
+      await waitPhase('levelCleared', 2000)
+    }
+
     await page.goto(url)
+    await page.getByRole('button', { name: /Clásico/ }).click()
     await page.getByRole('button', { name: '¡Jugar!' }).click()
     await waitPhase('playing', 6000)
-
-    for (let i = 0; i < 15; i++) {
-      await tapScene()
-      await page.waitForTimeout(60)
-    }
-    await waitPhase('levelCleared', 2000)
+    await breakPinata()
+    if (await page.getByText('Tiendita').count()) fail('el Clásico no debe tener tiendita')
 
     const vp = page.viewportSize()
     for (const sel of ['[data-testid="time-left"]', 'svg[aria-label="Piñata"]']) {
@@ -57,6 +63,14 @@ for (const [name, device] of targets) {
     const m = await page.evaluate(() => ({ scrollY: window.scrollY, scale: window.visualViewport?.scale ?? 1 }))
     if (m.scrollY !== 0) fail(`la página hizo scroll (${m.scrollY})`)
     if (m.scale !== 1) fail(`la página hizo zoom (${m.scale})`)
+
+    // Fiesta: volver al menú de modos; Fiesta sale deshabilitado ("Próximamente").
+    await page.getByRole('button', { name: 'Menú' }).click()
+    await page.getByRole('button', { name: '← Modos' }).click()
+    const fiesta = page.getByRole('button', { name: /Fiesta/ })
+    await fiesta.waitFor({ timeout: 3000 })
+    if (!(await fiesta.isDisabled())) fail(`el botón de Fiesta debería estar deshabilitado`)
+    if (!(await fiesta.innerText()).includes('Próximamente')) fail(`falta "Próximamente" en Fiesta`)
   } catch (e) {
     fail(`flujo interrumpido en fase "${await phase().catch(() => '?')}": ${e.message.split('\n')[0]}`)
   }
