@@ -1,6 +1,6 @@
 const MEDALS = ['bg-cempasuchil', 'bg-[#C9D1D9]', 'bg-[#E0915A]']
 
-/** Tabla de puntajes: top 10 ordenado por nivel y luego puntos. */
+/** Tabla de campeones de un modo: top 10 ordenado por nivel y luego dulces. */
 export default function Leaderboard({ scores, status, onRetry, highlightId, limit = 10 }) {
   return (
     <section className="mt-4">
@@ -35,7 +35,7 @@ export default function Leaderboard({ scores, status, onRetry, highlightId, limi
               </span>
               <span className="min-w-0 flex-1 truncate">{s.name}</span>
               <span className="font-comic text-base tracking-wide">Nv {s.level}</span>
-              <span className="w-14 text-right tabular-nums">{s.points}</span>
+              <span className="w-16 text-right tabular-nums">{s.points} <span className="text-xs text-tinta/60">dulces</span></span>
             </li>
           ))}
         </ol>

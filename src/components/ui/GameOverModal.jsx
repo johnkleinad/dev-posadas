@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react'
+import { getMode } from '../../game/modes.js'
 import { MAX_NAME_LENGTH, sanitizeName } from '../../game/validation.js'
 import Leaderboard from './Leaderboard.jsx'
 import Modal, { ComicButton } from './Modal.jsx'
@@ -25,7 +26,7 @@ export default function GameOverModal({ state, board, onSave, onRestart, onMenu 
     if (!canSave || busy.current) return
     busy.current = true
     setSaveState('saving')
-    const res = await onSave({ name, level: levelsCleared, points })
+    const res = await onSave({ name, level: levelsCleared, points, mode: getMode(state.modeId).boardId })
     busy.current = false
     if (res.ok) {
       setSavedId(res.score.id)
@@ -51,7 +52,7 @@ export default function GameOverModal({ state, board, onSave, onRestart, onMenu 
         </div>
         <div className="rounded-xl border-3 border-tinta bg-white p-2">
           <div className="font-comic text-4xl text-rosa">{points}</div>
-          <div className="text-xs font-extrabold text-tinta/70">puntos</div>
+          <div className="text-xs font-extrabold text-tinta/70">dulces</div>
         </div>
       </div>
 

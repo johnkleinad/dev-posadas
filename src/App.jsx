@@ -58,6 +58,12 @@ function Game() {
     game.start(modeId)
   }
 
+  /** Cobra el power-up elegido en la tiendita (si hay) y pasa al siguiente nivel. */
+  function nextLevel(powerUpId) {
+    if (powerUpId) game.buy(powerUpId)
+    game.nextLevel()
+  }
+
   function pickMode(modeId) {
     sfx.unlock()
     setSelectedModeId(modeId)
@@ -76,9 +82,9 @@ function Game() {
       {phase === 'menu' && screen === 'mode' && (
         <ModeModal mode={mode} board={board} onPlay={() => play(mode.id)} onBack={() => setScreen('modes')} />
       )}
-      {phase === 'countdown' && <Countdown value={game.countdownLeft} sfx={sfx} />}
-      {phase === 'playing' && game.timeLeft > 9.4 && <Countdown value={0} sfx={sfx} />}
-      {phase === 'levelCleared' && <LevelClearedModal key={state.level} state={state} onNext={game.nextLevel} />}
+      {phase === 'countdown' && <Countdown value={game.countdownLeft} sfx={sfx} note={state.retrying ? '¡Pidiendo posada!' : null} />}
+      {phase === 'playing' && game.sinceStart < 600 && <Countdown value={0} sfx={sfx} />}
+      {phase === 'levelCleared' && <LevelClearedModal key={state.level} state={state} onNext={nextLevel} />}
       {phase === 'gameOver' && <GameOverModal state={state} board={board} onSave={submit} onRestart={() => play()} onMenu={backToMode} />}
     </GameScene>
   )
