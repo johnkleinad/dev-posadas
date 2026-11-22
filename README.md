@@ -4,11 +4,27 @@ Juego web de piñatas para posadas: rompe la piñata a puro tap (o clic) antes d
 
 **Jugar:** https://main.d1d7zmugu9x1aq.amplifyapp.com
 
+## Modos
+
+- **Clásico:** rompe piñatas contra el reloj, nivel tras nivel.
+- **Fiesta:** igual, pero entre niveles hay una **tiendita**. Ahí gastas tus dulces en un power-up para el siguiente nivel (uno por nivel, no se acumula). El precio es `base × nivel`.
+
+| Power-up | Efecto | Base |
+|---|---|---|
+| Velita | +2 s en el nivel | 40 |
+| Escarcha | Congela el reloj 2 s cuando quedan 2 s | 40 |
+| Luces de bengala | Golpe triple en los últimos 3 s | 50 |
+| Ponche | 25 % menos golpes | 60 |
+| Dulce de tamarindo | Cada golpe cuenta doble | 90 |
+| Pedir posada | Si se acaba el tiempo, repites el nivel | 120 |
+
+Cada modo tiene su propia tabla de campeones. Los modos viven en `src/game/modes.js` y los power-ups en `src/game/powerups.js`. Un modo nuevo es una entrada más; un power-up nuevo es una combinación de efectos que ya existen.
+
 ## Reglas
 
 - Golpes por nivel: `15 + 6·(nivel − 1)` (15, 21, 27…).
-- Puntos por nivel superado: `100·nivel + 50 × segundos sobrantes`.
-- Tabla de campeones: primero por niveles superados, luego por puntos.
+- Dulces por nivel superado: `100·nivel + 50 × segundos sobrantes` (con la Escarcha cuenta lo que marca el reloj).
+- Tabla de campeones (por modo): primero niveles superados, luego dulces juntados en total.
 
 ## Desarrollo
 
