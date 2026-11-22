@@ -14,7 +14,7 @@ Habrá **más modos después**, y todos parten del clásico. El que ya tiene en 
 
 ## Metas
 
-1. Selector de modo en el menú de inicio: Clásico y Fiesta.
+1. Menú en dos pantallas (decisión del usuario): **(1) selección de modo** → **(2) pantalla del modo** con sus reglas, su tabla de campeones y "¡Jugar!".
 2. **Tabla de campeones separada por modo.** Los puntajes que ya existen cuentan como Clásico.
 3. Los puntos se llaman **dulces** en toda la interfaz de los dos modos.
 4. Se **elimina el límite de 20 golpes por segundo** en todos los modos.
@@ -82,7 +82,7 @@ Cada modo tiene su propia tabla. Una partida de Fiesta nunca aparece en la tabla
 - **Golpes con multiplicador:** el contador `golpes / requeridos` sube de 2 en 2 o de 3 en 3, y el golpe que rompe la piñata puede pasar del requerido. Se muestra el tope (`15/15`).
 - **Bonus con Escarcha:** el bonus por segundos sobrantes se calcula con el **tiempo que muestra el reloj**, no con el real. Romper la piñata durante la congelación cuenta como 2.0 s sobrantes. La pantalla y el puntaje siempre coinciden, y la Escarcha ayuda a romper la piñata pero no infla el bonus. La Velita sí lo sube, porque sus segundos extra se ven en el reloj. El motor guarda el `deadline` real y aparte la ventana de congelación. "Tiempo mostrado" = tiempo real restante menos lo que quede de congelación, con piso en 0.
 - **"Dulces" en Clásico:** solo cambia el texto. Las fórmulas no cambian.
-- **Menú:** dos tarjetas grandes, "Clásico" y "Fiesta", cada una con una línea de descripción, más pestañas de tabla por modo. El menú recuerda el último modo elegido (localStorage) y abre en él.
+- **Navegación del menú:** la pantalla del modo tiene un botón "← Modos" para volver. Al terminar la partida, "Otra vez" repite el mismo modo y "Menú" regresa a la pantalla de ese modo, no a la selección.
 - **Sin límite de golpes:** se borra `hitLimiter.js` con su prueba. Un golpe sigue contando solo si llega antes del deadline. El timestamp se mantiene como hoy, con `performance.now()` al recibir el evento.
 
 ## Arquitectura
@@ -139,11 +139,10 @@ Cada modo es `{ id, nombre, descripcion, shop: [powerUpIds] | null, boardId }`, 
 
 ### Interfaz
 
-- **Menú (`StartModal`):**
-  - Tarjetas de modo.
-  - Las reglas se describen según el modo elegido.
-  - El botón "¡Jugar!" inicia el modo seleccionado.
-  - Pestañas "Clásico | Fiesta" para ver cada tabla.
+- **Menú en dos pantallas (decisión del usuario):**
+  1. **Selección de modo:** título "¡Dale, Dale!", botón de sonido y una tarjeta grande por modo (nombre, una línea de descripción, ícono). Tocar una tarjeta abre la pantalla de ese modo.
+  2. **Pantalla del modo:** nombre del modo, reglas del modo, botón "¡Jugar!" y **la tabla de campeones de ese modo**, más "← Modos" para volver. No hay pestañas: cada modo muestra solo su tabla.
+  - Las dos pantallas son modales sobre la escena, como hoy. La lista de modos sale del registro de modos, así que un modo nuevo aparece solo.
 - **Nivel superado (`LevelClearedModal`):**
   - Muestra los dulces ganados y el total.
   - En Fiesta, además, la tiendita: 6 tarjetas con nombre, ícono SVG de cómic, efecto en una línea y precio.
