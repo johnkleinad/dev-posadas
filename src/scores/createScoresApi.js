@@ -8,7 +8,8 @@ const errorMessage = (err) => err?.message || 'Error desconocido'
  * `{ ok: true, ... }` o `{ ok: false, error }`.
  */
 export function createScoresApi(client) {
-  async function fetchTopScores(n = 10) {
+  /** Top `n` de la tabla `boardId`. Las filas sin `mode` (anteriores a los modos) son del Clásico. */
+  async function fetchTopScores(n = 10, boardId = 'clasico') {
     try {
       const all = []
       let nextToken = null
@@ -18,13 +19,13 @@ export function createScoresApi(client) {
         all.push(...(data ?? []))
         nextToken = next
       } while (nextToken)
-      return { ok: true, scores: topScores(all, n) }
+      return { ok: true, scores: topScores(all.filter((s) => (s.mode ?? 'clasico') === boardId), n) }
     } catch (err) {
       return { ok: false, error: errorMessage(err) }
     }
   }
 
-  async function submitScore({ name, level, points }) {
+  async function submitScore({ name, level, points, mode = 'clasico' }) {
     const clean = sanitizeName(name)
     if (!clean) return { ok: false, error: 'Nombre inválido' }
     try {
@@ -32,6 +33,7 @@ export function createScoresApi(client) {
         name: clean,
         level: Math.max(0, Math.trunc(level)),
         points: Math.max(0, Math.trunc(points)),
+        mode,
       })
       if (errors?.length || !data) return { ok: false, error: errors?.[0]?.message ?? 'No se pudo guardar' }
       return { ok: true, score: data }

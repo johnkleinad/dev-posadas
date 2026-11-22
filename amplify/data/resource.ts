@@ -10,6 +10,9 @@ const schema = a.schema({
       name: a.string().required(),
       level: a.integer().required(),
       points: a.integer().required(),
+      // Tabla del modo de juego ('clasico' | 'fiesta' | …). Opcional: las filas
+      // anteriores a los modos no lo tienen y cuentan como 'clasico'.
+      mode: a.string(),
     })
     .authorization((allow) => [allow.publicApiKey().to(['create', 'read'])]),
 });
