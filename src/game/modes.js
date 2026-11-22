@@ -4,6 +4,7 @@ import { POWER_UPS } from './powerups.js'
  * Modos de juego como recetas sobre el motor del Clásico.
  *   shop     ids de power-ups de la tiendita entre niveles (null = sin tiendita)
  *   boardId  tabla de campeones donde se guardan sus partidas
+ *   comingSoon  true = se ve en el menú, deshabilitado, con "Próximamente"
  * Un modo nuevo es una entrada más; aparece solo en el menú.
  */
 export const MODES = [
@@ -22,6 +23,7 @@ export const MODES = [
     rules: 'Como el clásico, pero entre niveles gastas tus dulces en un power-up para el siguiente nivel. Solo uno por nivel.',
     shop: POWER_UPS.map((p) => p.id),
     boardId: 'fiesta',
+    comingSoon: true,
   },
 ]
 

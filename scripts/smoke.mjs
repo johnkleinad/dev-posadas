@@ -1,6 +1,6 @@
 // Prueba de humo: node scripts/smoke.mjs <url>
 // Clásico: modos → Clásico → nivel 1 → nivel 2 → fin de partida (sin guardar puntaje).
-// Fiesta: "Menú" → "← Modos" → Fiesta → nivel 1 → tiendita visible (sin comprar).
+// Fiesta: "Menú" → "← Modos" → el botón de Fiesta está deshabilitado ("Próximamente").
 // En iPhone 13, Pixel 7 y escritorio. Sale con código 1 si algo falla.
 // Usa PW_CHROME=<ruta a chrome> si el navegador de Playwright no está instalado.
 import { chromium, devices } from 'playwright'
@@ -64,16 +64,13 @@ for (const [name, device] of targets) {
     if (m.scrollY !== 0) fail(`la página hizo scroll (${m.scrollY})`)
     if (m.scale !== 1) fail(`la página hizo zoom (${m.scale})`)
 
-    // Fiesta: volver al menú del modo, cambiar a Fiesta y llegar a la tiendita.
+    // Fiesta: volver al menú de modos; Fiesta sale deshabilitado ("Próximamente").
     await page.getByRole('button', { name: 'Menú' }).click()
     await page.getByRole('button', { name: '← Modos' }).click()
-    await page.getByRole('button', { name: /Fiesta/ }).click()
-    await page.getByRole('heading', { name: 'Modo Fiesta' }).waitFor({ timeout: 3000 })
-    await page.getByRole('button', { name: '¡Jugar!' }).click()
-    await waitPhase('playing', 6000)
-    await breakPinata()
-    await page.getByText('Tiendita').waitFor({ timeout: 3000 })
-    await page.getByRole('button', { name: 'Siguiente nivel' }).waitFor({ timeout: 3000 })
+    const fiesta = page.getByRole('button', { name: /Fiesta/ })
+    await fiesta.waitFor({ timeout: 3000 })
+    if (!(await fiesta.isDisabled())) fail(`el botón de Fiesta debería estar deshabilitado`)
+    if (!(await fiesta.innerText()).includes('Próximamente')) fail(`falta "Próximamente" en Fiesta`)
   } catch (e) {
     fail(`flujo interrumpido en fase "${await phase().catch(() => '?')}": ${e.message.split('\n')[0]}`)
   }

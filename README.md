@@ -7,7 +7,7 @@ Juego web de piñatas para posadas: rompe la piñata a puro tap (o clic) antes d
 ## Modos
 
 - **Clásico:** rompe piñatas contra el reloj, nivel tras nivel.
-- **Fiesta:** igual, pero entre niveles hay una **tiendita**. Ahí gastas tus dulces en un power-up para el siguiente nivel (uno por nivel, no se acumula). El precio es `base × nivel`.
+- **Fiesta** (próximamente: sale deshabilitado en el menú con `comingSoon` en `src/game/modes.js`)**:** igual, pero entre niveles hay una **tiendita**. Ahí gastas tus dulces en un power-up para el siguiente nivel (uno por nivel, no se acumula). El precio es `base × nivel`.
 
 | Power-up | Efecto | Base |
 |---|---|---|

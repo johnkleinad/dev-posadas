@@ -32,12 +32,16 @@ export default function ModeSelectModal({ onPick, muted, onToggleMute }) {
             key={mode.id}
             type="button"
             onClick={() => onPick(mode.id)}
-            className={`flex items-center gap-3 rounded-2xl border-4 border-tinta px-4 py-3 text-left shadow-[4px_4px_0_#1A1A1A] transition-transform active:translate-x-[3px] active:translate-y-[3px] active:shadow-[1px_1px_0_#1A1A1A] ${CARD_COLORS[i % CARD_COLORS.length]}`}
+            disabled={mode.comingSoon}
+            className={`flex items-center gap-3 rounded-2xl border-4 border-tinta px-4 py-3 text-left shadow-[4px_4px_0_#1A1A1A] transition-transform ${mode.comingSoon ? 'cursor-not-allowed opacity-60 grayscale' : 'active:translate-x-[3px] active:translate-y-[3px] active:shadow-[1px_1px_0_#1A1A1A]'} ${CARD_COLORS[i % CARD_COLORS.length]}`}
           >
             <ModeIcon id={mode.id} />
             <span>
               <span className="block font-comic text-3xl leading-none tracking-wide">{mode.name}</span>
               <span className="block text-sm font-extrabold opacity-80">{mode.description}</span>
+              {mode.comingSoon && (
+                <span className="mt-1 block font-comic text-lg leading-none tracking-wide">Próximamente</span>
+              )}
             </span>
           </button>
         ))}
