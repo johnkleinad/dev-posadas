@@ -1,14 +1,20 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 const toBoard = (boardId, res) => (res.ok ? { boardId, status: 'ok', scores: res.scores } : { boardId, status: 'error', scores: [] })
 
 /** Carga la tabla del modo (`boardId`), ordenada, para mostrar el top 10 y calcular tu lugar. */
 export function useLeaderboard(api, active, boardId = 'clasico') {
   const [board, setBoard] = useState({ boardId: null, status: 'loading', scores: [] })
+  // Tabla que se está mostrando: una recarga que termina tarde para otro modo se descarta.
+  const currentBoard = useRef(boardId)
+  useLayoutEffect(() => {
+    currentBoard.current = boardId
+  }, [boardId])
 
   const reload = useCallback(async () => {
-    setBoard((b) => ({ ...b, status: 'loading' }))
-    setBoard(toBoard(boardId, await api.fetchTopScores(1000, boardId)))
+    setBoard((b) => (b.boardId === boardId ? { ...b, status: 'loading' } : b))
+    const res = await api.fetchTopScores(1000, boardId)
+    if (currentBoard.current === boardId) setBoard(toBoard(boardId, res))
   }, [api, boardId])
 
   useEffect(() => {

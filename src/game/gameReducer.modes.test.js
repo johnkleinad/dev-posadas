@@ -124,3 +124,11 @@ describe('motor con modos', () => {
     expect(timeLeftAt(s, 0)).toBe(12)
   })
 })
+
+describe('Pedir posada con TICK tardío', () => {
+  it('la cuenta del reintento arranca desde ahora, no desde el deadline viejo', () => {
+    let s = buyAndPlay(fiestaCleared(), 'posada', 30000) // deadline 40000
+    s = r(s, { type: 'TICK', now: 100000 }) // el teléfono estuvo bloqueado
+    expect(s).toMatchObject({ phase: 'countdown', countdownEndsAt: 103000 })
+  })
+})

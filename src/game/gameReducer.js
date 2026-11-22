@@ -60,10 +60,10 @@ function startPlaying(state, now) {
   return { ...next, freezeStart, freezeEnd: freezeStart + freeze.seconds * 1000, deadline: next.deadline + freeze.seconds * 1000 }
 }
 
-function timeUp(state) {
+function timeUp(state, now) {
   const canRetry = getPowerUp(state.active)?.effects.retryOnTimeout && !state.retryUsed
   if (!canRetry) return { ...state, phase: 'gameOver' }
-  return { ...beginCountdown({ ...state, pending: null }, state.level, state.deadline), retryUsed: true, retrying: true }
+  return { ...beginCountdown({ ...state, pending: null }, state.level, now), retryUsed: true, retrying: true }
 }
 
 export function gameReducer(state, action) {
@@ -73,7 +73,7 @@ export function gameReducer(state, action) {
 
     case 'TICK':
       if (state.phase === 'countdown' && action.now >= state.countdownEndsAt) return startPlaying(state, action.now)
-      if (state.phase === 'playing' && action.now >= state.deadline) return timeUp(state)
+      if (state.phase === 'playing' && action.now >= state.deadline) return timeUp(state, action.now)
       return state
 
     case 'HIT': {

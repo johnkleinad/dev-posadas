@@ -35,7 +35,7 @@ export default function Leaderboard({ scores, status, onRetry, highlightId, limi
               </span>
               <span className="min-w-0 flex-1 truncate">{s.name}</span>
               <span className="font-comic text-base tracking-wide">Nv {s.level}</span>
-              <span className="w-16 text-right tabular-nums">{s.points} <span className="text-xs text-tinta/60">dulces</span></span>
+              <span className="shrink-0 text-right whitespace-nowrap tabular-nums">{s.points} <span className="text-xs text-tinta/60">dulces</span></span>
             </li>
           ))}
         </ol>
